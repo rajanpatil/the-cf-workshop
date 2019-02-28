@@ -8,9 +8,9 @@ Parameters:
     Description: environment that this pipeline will be deploying resources into
     Type: String
     AllowedValues:
-      - dev
-      - live
-    Default: dev
+      - dev-rajan
+      - live-rajan
+    Default: dev-rajan
   StackNameSuffix:
     Description: Provide a suffix to disambiguate the stack to be provisioned
     Type: String
