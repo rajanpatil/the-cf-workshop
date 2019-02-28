@@ -24,6 +24,7 @@ Parameters:
   GithubAccessToken:
     Description: Personal access token generated for Github
     Type: String
+    NoEcho: true
   BranchName:
     Description: The branch in version control to retrieve changes from
     Type: String
@@ -49,7 +50,7 @@ Resources:
         Location: !Ref 'ArtifactStoreBucket'
         Type: S3
       DisableInboundStageTransitions: []
-      Name: !Sub "${ApplicationName}-${Environment}"
+      Name: !Sub "${ApplicationName}-${StackNameSuffix}-${Environment}"
       RoleArn: !GetAtt [PipelineRole, Arn]
       Stages:
         - Name: Source
@@ -91,10 +92,10 @@ Resources:
     Properties:
       AssumeRolePolicyDocument:
         Statement:
-        - Action: ['sts:AssumeRole']
-          Effect: Allow
-          Principal:
-            Service: [cloudformation.amazonaws.com]
+          - Action: ['sts:AssumeRole']
+            Effect: Allow
+            Principal:
+              Service: [cloudformation.amazonaws.com]
         Version: '2012-10-17'
       Path: /
       Policies:
@@ -108,16 +109,16 @@ Resources:
                   - 'autoscaling:*'
                 Effect: Allow
                 Resource: '*'
-              
+
   PipelineRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Statement:
-        - Action: ['sts:AssumeRole']
-          Effect: Allow
-          Principal:
-            Service: [codepipeline.amazonaws.com]
+          - Action: ['sts:AssumeRole']
+            Effect: Allow
+            Principal:
+              Service: [codepipeline.amazonaws.com]
         Version: '2012-10-17'
       Path: /
       Policies:
@@ -126,17 +127,17 @@ Resources:
             Version: '2012-10-17'
             Statement:
               - Action:
-                - 's3:*'
-                - 'cloudformation:CreateStack'
-                - 'cloudformation:DescribeStacks'
-                - 'cloudformation:DeleteStack'
-                - 'cloudformation:UpdateStack'
-                - 'cloudformation:CreateChangeSet'
-                - 'cloudformation:ExecuteChangeSet'
-                - 'cloudformation:DeleteChangeSet'
-                - 'cloudformation:DescribeChangeSet'
-                - 'cloudformation:SetStackPolicy'
-                - 'iam:PassRole'
-                - 'sns:Publish'
+                  - 's3:*'
+                  - 'cloudformation:CreateStack'
+                  - 'cloudformation:DescribeStacks'
+                  - 'cloudformation:DeleteStack'
+                  - 'cloudformation:UpdateStack'
+                  - 'cloudformation:CreateChangeSet'
+                  - 'cloudformation:ExecuteChangeSet'
+                  - 'cloudformation:DeleteChangeSet'
+                  - 'cloudformation:DescribeChangeSet'
+                  - 'cloudformation:SetStackPolicy'
+                  - 'iam:PassRole'
+                  - 'sns:Publish'
                 Effect: Allow
                 Resource: '*'
